@@ -1,5 +1,5 @@
 import './App.css'
-import {useState, useRef, useReducer,useCallback,createContext} from "react";
+import {useState, useRef, useReducer,useCallback,createContext,useMemo, memo} from "react";
 import Header from './Components/Header';
 import Editor from './Components/Editor';
 import List from './Components/List';
@@ -43,7 +43,13 @@ function reducer(state, action){
   }
 }
 
-export const TodoContext = createContext();  //외부에 선언 
+
+//section11. 여길 두개로 분리 
+//변화할 값 
+export const TodoStateContext = createContext(); 
+//변화하지 않을 값 
+export const TodoDispatchContext = createContext();
+
 
 function App() {
 
@@ -87,22 +93,26 @@ function App() {
 // 그뒤로는 아무리 많이 리렌더링 되더라도
 //다시는 생성되지 않도록 최적화 
 
+
+//onCreate,onU,onD 세개의함수를 묶어주는 객체를
+//다시는 생성하지 않도록 
+const memoizedDispatch = useMemo(()=>{
+  return {onCreate,onDelete,onUpdate};
+},[]);
+
+
   return (
     <div className = "App">
       
     <Header />
-    <TodoContext.Provider 
-    value ={{
-      todos,
-      onCreate,
-      onUpdate,
-      onDelete,
-    }}>
-    <Editor/>
-    <List />
-    </TodoContext.Provider>
-    {/* Provider로 감싸면 결국 이 안에 있는 컴포넌트들이
-    저 위에 있는 value 데이터를 공급받을 수 있다.   */}
+    <TodoStateContext.Provider value ={todos}>
+      <TodoDispatchContext.Provider
+        value ={memoizedDispatch}
+        >
+          <Editor/>
+          <List />
+      </TodoDispatchContext.Provider>
+    </TodoStateContext.Provider>
     </div>
   );
 }
