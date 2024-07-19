@@ -1,7 +1,18 @@
 import "./TodoItem.css";
+import { memo } from "react";
 
 
-const TodoItem = ({id,isDone,content,date,onUpdate,onDelete}) =>{
+const TodoItem = ({
+    id,
+    isDone,
+    content,
+    date,
+    onUpdate,
+    onDelete
+    //매번 전달될때마다 새롭게 다른 주소값을 갖게 된다
+    //그래서 memo 메서드가 판단하기에 props가 바뀌었다라고 판단 
+
+}) =>{
     const onChangeCheckbox = () =>{
         onUpdate(id);
     };
@@ -21,4 +32,22 @@ const TodoItem = ({id,isDone,content,date,onUpdate,onDelete}) =>{
     )
 }
 
-export default TodoItem;
+export default memo(TodoItem, (prevProps, nextProps)=>{
+    //최적화 커스텀 마이징 
+    // 반환값에 따라, props가 바뀌었는지 안바뀌었는지 판단
+    // T-> props 바뀌지 않음 -> 리렌더링 x
+    // F -> props 바뀜 -> 리렌더링 o
+
+    //id,isDone, content,date 값만 바뀌었을때 리렌더링 
+    if(prevProps.id !== nextProps.id) return false;
+    if(prevProps.isDone !== nextProps.isDone) return false;
+    if(prevProps.content !== nextProps.content) return false;
+    if(prevProps.date !== nextProps.date) return false;
+
+
+    //위 4개의 값이 바뀌지 않았다면 
+    //그냥 return true 반환해서
+    //props의 값 안 바뀌었고-> 리렌더링하지 마 !
+    return true;
+
+});
