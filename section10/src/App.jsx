@@ -1,5 +1,5 @@
 import './App.css'
-import {useState, useRef, useReducer} from "react";
+import {useState, useRef, useReducer,useCallback} from "react";
 import Header from './Components/Header';
 import Editor from './Components/Editor';
 import List from './Components/List';
@@ -48,7 +48,7 @@ function App() {
   const [todos, dispatch] = useReducer(reducer,mockData);
   const idRef = useRef(3);
 
-  const onCreate = (content)=>{
+  const onCreate = useCallback((content)=>{
     dispatch({
       type :"CREATE",
       data: {
@@ -58,9 +58,12 @@ function App() {
         data : new Date().getTime(),
       },
     });
-  };
+  },[]); 
+  // 첫번째 인수로 익명함수 
+  // 두번째 인수로 deps 
 
-  const onUpdate =(targetId) =>{
+
+  const onUpdate =useCallback((targetId) =>{
      //todos State의 값들 중에 
      //targetId와 일치하는 id를 갖는 투두 아이템의 isDone 변경 
 
@@ -69,15 +72,18 @@ function App() {
       type :"UPDATE",
       targetId:targetId
     })
-  };
+  },[]);
   
-  const onDelete = (targetId)=>{
-    //인수 : todos 배열에서 targetId와 일치하는 id를 갖는 요소만 삭제한 새로운 배열 
-    dispatch({
-      type : "DELETE",
-      targetId :targetId,
-    })
-  };
+  const onDelete = useCallback((targetId)=>{
+  //인수 : todos 배열에서 targetId와 일치하는 id를 갖는 요소만 삭제한 새로운 배열 
+  dispatch({
+    type : "DELETE",
+    targetId :targetId,
+  })
+},[]);
+//마운트 되었을 때만 딱 한번  생성되고 
+// 그뒤로는 아무리 많이 리렌더링 되더라도
+//다시는 생성되지 않도록 최적화 
 
   return (
     <div className = "App">

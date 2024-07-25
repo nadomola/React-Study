@@ -26,6 +26,7 @@ const mockData = [
     date : new Date().getTime(),
   },
 ];
+
 // todosSate의 상태변화 담당 
 function reducer(state, action){
   switch (action.type){
