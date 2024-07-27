@@ -33,7 +33,7 @@ const getMonthlyData = (pivotDate, data)=>{
 };
 
 const Home =()=>{
-    const data = useContext(DiaryStateContext);
+    const data = useContext(DiaryStateContext); //ㅋㅋ 여기서 괄호 오류 미친 것 같음 
     const [pivotDate, setPivotDate] = useState(new Date());
 
     const monthlyData= getMonthlyData(pivotDate,data);
