@@ -4,6 +4,7 @@ import { DiaryStateContext } from "../App";
 import Header from "../Components/Header";
 import Button from "../Components/Button";
 import DiaryList from "../Components/DiaryList";
+import usePageTitle from "../hooks/usePageTitle";
 
 const getMonthlyData = (pivotDate, data)=>{
 
@@ -35,6 +36,7 @@ const getMonthlyData = (pivotDate, data)=>{
 const Home =()=>{
     const data = useContext(DiaryStateContext); //ㅋㅋ 여기서 괄호 오류 미친 것 같음 
     const [pivotDate, setPivotDate] = useState(new Date());
+    usePageTitle("감정 일기장");
 
     const monthlyData= getMonthlyData(pivotDate,data);
 
